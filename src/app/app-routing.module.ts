@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 import { UploadComponent } from './modules/upload/upload.component';
+import { ViewComponent } from './modules/view/view.component';
 
 
 const routes: Routes = [
@@ -10,6 +11,9 @@ const routes: Routes = [
   },
   {
     path: 'upload', component: UploadComponent, pathMatch: 'full'
+  },
+  {
+    path: 'view', component: ViewComponent, pathMatch: 'full'
   }
 ];
 

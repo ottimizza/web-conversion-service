@@ -1,0 +1,14 @@
+.center {
+    width: 100%;
+}
+
+.f-upload-label {
+    border-color: #c7c7c7;
+    border-width: 2px;
+    border-style: dashed;
+    border-radius: 8px;
+
+    &:hover {
+        box-shadow: 0px 0px 12px #c7c7c7;
+    }
+}
