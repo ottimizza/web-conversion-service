@@ -55,7 +55,7 @@ export class UploadComponent implements OnInit {
 
     public upload() {
         this.conversion.upload(this.file, JSON.stringify(this.opts)).subscribe((response) => {
-            this.store(this.file.name, response);
+            // this.store(this.file.name, response);
             this.download(response)
         });
     }
@@ -63,7 +63,7 @@ export class UploadComponent implements OnInit {
     private download(data) {
         const blob = new Blob([data], { type: 'text/csv' });
         const url = window.URL.createObjectURL(blob);
-        window.open(url);
+        window.open(url, "_blank");
     }
 
     // 
