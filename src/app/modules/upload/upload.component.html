@@ -1,110 +1,103 @@
-<div class="container align-items-center py-5">
-    <div class="row">
-        <div class="offset-sm-0 offset-md-2 col-sm-12 col-md-8">
-            <div class="card w-100">
-                <div class="card-header">
-                    Conversão de PDF para CSV
-                </div>
-                <!-- <img src="..." class="card-img-top" alt="..."> -->
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-sm-12 col-md-6">
-                            <div class="form-group">
-                                <input #fileInput type="file" name="file-upload" id="file-upload" class="d-none"
-                                    (change)="onFileChanged($event)">
-                                <label class="btn f-upload-label p-5 w-100" for="file-upload">
-                                    Clique ou arraste um PDF aqui para enviar para conversão!
-                                </label>
-                            </div>
-                            <div *ngIf="file != null" class="form-group">
-                                <table class="table table-hover">
-                                    <tbody class="">
-                                        <tr>
-                                            <td>
-                                                {{ file.name }}
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="col-sm-12 col-md-6">
+<div class="conversion-config-sidebar">
+    <app-configuration></app-configuration>
+</div>
 
-                            <!-- DELIMITADOR -->
-                            <label for="basic-url">
-                                <span>Delimitador:</span>
-                            </label>
-                            <div class="input-group mb-4">
-                                <div class="btn-group" role="group" aria-label="Basic example">
-                                    <button type="button" class="btn btn-outline-secondary px-3"
-                                        [class.active]="opts.delimiter === ','" (click)="delimiter(',')">
-                                        <strong>,</strong>
-                                    </button>
-                                    <button type="button" class="btn btn-outline-secondary px-3"
-                                        [class.active]="opts.delimiter === ';'" (click)="delimiter(';')">
-                                        <strong>;</strong>
-                                    </button>
-                                    <button type="button" class="btn btn-outline-secondary px-3"
-                                        [class.active]="opts.delimiter === '|'" (click)="delimiter('|')">
-                                        <strong>|</strong>
-                                    </button>
+
+
+<div class="page-wrapper">
+    <div class="container-fluid p-3">
+        <div class="row">
+            <div class="offset-3 col-6">
+                <ul class="nav nav-pills nav-fill">
+                    <li class="nav-item">
+                        <a class="btn nav-link" [class.active]="currentPage == 'upload'"
+                            (click)="currentPage = 'upload'">
+                            Envio de Planilha
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn nav-link" [class.active]="currentPage == 'preview'"
+                            (click)="currentPage = 'preview'">
+                            Visualização
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link disabled" href="#"></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="currentPage === 'upload'" class="container align-items-center py-5">
+        <div class="row">
+            <!-- <div class="offset-sm-0 offset-md-2 col-sm-12 col-md-8"> -->
+            <div class="offset-md-3 col-9">
+                <div class="card w-100">
+                    <div class="card-header">
+                        Conversão de PDF para CSV
+                    </div>
+                    <!-- <img src="..." class="card-img-top" alt="..."> -->
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <input #fileInput type="file" name="file-upload" id="file-upload" class="d-none"
+                                        (change)="onFileChanged($event)">
+                                    <label class="btn f-upload-label p-5 w-100" for="file-upload">
+                                        Clique ou arraste um PDF aqui para enviar para conversão!
+                                    </label>
+                                </div>
+                                <div *ngIf="file != null" class="form-group">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Nome</th>
+                                                <th>Tamanho</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="">
+                                            <tr>
+                                                <td>
+                                                    {{ file.name }}
+                                                </td>
+                                                <td>
+                                                    {{ formatBytes(file.size) }}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
-
-                            <div class="form-group mb-4">
-                                <label for="basic-url">Páginas:</label>
-                                <input id="input-pages" [(ngModel)]="opts.pages" class="form-control" placeholder="[1,2,3,4,5]"
-                                    type="text">
-                                <small class="text-muted">
-                                    Informe as páginas que serão lidas.<br>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;* [0,1,2]<br>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;* [0-5]<br>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;* [0-5,7,8,9]<br>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;* [0-5,7-9]<br>
-                                </small>
-                            </div>
-
-                            <!-- TRIM -->
-                            <div class="custom-control custom-switch mb-4">
-                                <input id="switch-trim" [(ngModel)]="opts.trim" class="custom-control-input"
-                                    type="checkbox">
-                                <label class="custom-control-label" for="switch-trim">
-                                    Trim <br>
-                                    <small class="text-muted">
-                                        (Remove os espaços à esquerda e a direita no texto)
-                                    </small>
-                                </label>
-                            </div>
-
-
-                            <!-- SHRINK -->
-                            <div class="custom-control custom-switch">
-                                <input id="switch-shrink" [(ngModel)]="opts.shrink" class="custom-control-input"
-                                    type="checkbox">
-                                <label class="custom-control-label" for="switch-shrink">
-                                    Shrink <br>
-                                    <small class="text-muted">
-                                        (Remove as células vazias - deslocamento de colunas)
-                                    </small>
-                                </label>
-                            </div>
-
                         </div>
                     </div>
-                </div>
 
-                <div class="card-footer">
-                    <div class="row">
-                        <div class="offset-2 col-8">
-                            <button class="btn btn-primary w-100" (click)="upload()">
-                                <span class="text-upppercase">
-                                    Enviar Arquivos
-                                </span>
-                            </button>
+                    <div class="card-footer">
+                        <div class="row">
+                            <div class="offset-2 col-8">
+                                <button class="btn btn-primary w-100" (click)="upload()">
+                                    <span class="text-upppercase">
+                                        Enviar Arquivos
+                                    </span>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+
+    <div *ngIf="currentPage === 'preview'" class="container">
+        <div class="row">
+            <div class="col-12">
+                <app-view [content]="content"></app-view>
+            </div>
+        </div>
+    </div>
+
 </div>

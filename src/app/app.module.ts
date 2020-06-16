@@ -7,17 +7,23 @@ import { AppComponent } from './app.component';
 import { UploadComponent } from './modules/upload/upload.component';
 
 import { HttpClientModule } from '@angular/common/http';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ContentLayoutComponent } from './layout/content-layout/content-layout.component';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
   declarations: [
     AppComponent,
-    UploadComponent
+    ContentLayoutComponent,
+    // UploadComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
+    CommonModule,
     FormsModule,
-    HttpClientModule
+    AppRoutingModule,
+    HttpClientModule,
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

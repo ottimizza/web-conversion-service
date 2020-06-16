@@ -9,7 +9,12 @@ export class ConversionService {
 
     public api: string = 'https://api-conversion-service.herokuapp.com';
 
-    constructor(public http: HttpClient) {}
+    constructor(public http: HttpClient) {
+        const A = "https://api-conversion-service.herokuapp.com";
+        const B = "http://localhost:5000";
+
+        this.api = A;
+    }
 
     public upload(file: File, opts: any): Observable<any> {
         const url = `${this.api}/api/v1/conversions/upload`;

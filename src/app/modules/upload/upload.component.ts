@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { ConversionService } from 'src/app/core/http/conversion.service';
+import { ConversionService } from '@app/http/conversion.service';
 
 
 @Component({
@@ -9,29 +9,16 @@ import { ConversionService } from 'src/app/core/http/conversion.service';
 })
 export class UploadComponent implements OnInit {
 
+    public currentPage: 'upload' | 'preview' = 'upload';
 
     @ViewChild('fileInput')
     public fileInputElement: ElementRef;
 
-    public config: any;
-
     public file: File;
 
-    public opts: any = {
-        delimiter: ";",
-        pages: "[0,1,2-5]",
-        trim: true,
-        shrink: false
-    };
-
-    public strategies: any[] = [
-        { id: 0, name: 'A' },
-        { id: 1, name: 'B' },
-        { id: 2, name: 'C' },
-        { id: 3, name: 'D' },
-    ];
-
     public conversions: Array<any> = new Array<any>();
+
+    public content: string;
 
     constructor(
         private conversion: ConversionService
@@ -47,15 +34,11 @@ export class UploadComponent implements OnInit {
 
     }
 
-    public delimiter(delimiter: string) {
-        this.opts.delimiter = delimiter;
-        console.log(this.opts.delimiter);
-
-    }
-
     public upload() {
-        this.conversion.upload(this.file, JSON.stringify(this.opts)).subscribe((response) => {
+        const config = window.localStorage.getItem("config");
+        this.conversion.upload(this.file, config).subscribe((response) => {
             // this.store(this.file.name, response);
+            this.content = response;
             this.download(response)
         });
     }
@@ -66,6 +49,18 @@ export class UploadComponent implements OnInit {
         window.open(url, "_blank");
     }
 
+
+    formatBytes(bytes, decimals = 2) {
+        if (bytes === 0) return '0 Bytes';
+
+        const k = 1024;
+        const dm = decimals < 0 ? 0 : decimals;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+    }
     // 
     // 
     //
