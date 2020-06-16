@@ -14,7 +14,8 @@ export class ConfigurationComponent implements OnInit {
 
     public strategies: any;
 
-    constructor() { }
+    constructor() {
+    }
 
     public strategy(event: any) {
         this.strategies.selected = this.strategies.options.filter((e) => e.value === event.target.value)[0];
@@ -78,9 +79,10 @@ export class ConfigurationComponent implements OnInit {
         };
 
 
-        this.config = JSON.parse(window.localStorage.getItem("config"));
+        let storedConfig = JSON.parse(window.localStorage.getItem("config"));
 
-        if (this.config && this.config.strategy) {
+        if (storedConfig && storedConfig.strategy) {
+            this.config = storedConfig;
             this.strategy({ target: { value: this.config.strategy } });
         }
 
