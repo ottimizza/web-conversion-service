@@ -42,6 +42,7 @@ export class ViewComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.refresh();
     }
 
 }

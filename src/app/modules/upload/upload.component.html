@@ -1,103 +1,139 @@
-<div class="conversion-config-sidebar">
-    <app-configuration></app-configuration>
-</div>
+<div #container class="sidebar">
+  <div class="conversion-config-sidebar">
+    <button (click)="toggleConfiguration()" class="btn conversion-config-sidebar-toggle">
+      <i class="far fa-bars"></i>
+    </button>
+    <app-configuration class="conversion-config"></app-configuration>
+  </div>
 
-
-
-<div class="page-wrapper">
-    <div class="container-fluid p-3">
-        <div class="row">
-            <div class="offset-3 col-6">
-                <ul class="nav nav-pills nav-fill">
-                    <li class="nav-item">
-                        <a class="btn nav-link" [class.active]="currentPage == 'upload'"
-                            (click)="currentPage = 'upload'">
-                            Envio de Planilha
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="btn nav-link" [class.active]="currentPage == 'preview'"
-                            (click)="currentPage = 'preview'">
-                            Visualização
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#"></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link disabled" href="#"></a>
-                    </li>
-                </ul>
-            </div>
-        </div>
+  <div class="page-wrapper d-flex flex-column">
+    <div class="header d-flex align-items-center">
+      <a href="#" class="mw-100 navbar-brand px-4">
+        <img style="height: 25px;" height="40px" class="img-thumbnail bg-transparent p-0 border-0"
+          src="https://ottimizza.com.br/images/ottimizza.png" alt="undefined">
+      </a>
+      <ul class="custom-nav nav nav-pills nav-fill">
+        <li class="nav-item">
+          <a class="btn nav-link" [class.active]="currentPage == 'upload'" (click)="currentPage = 'upload'">
+            Envio de Planilha
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="btn nav-link" [class.active]="currentPage == 'preview'" (click)="currentPage = 'preview'">
+            Visualização
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#"></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link disabled" href="#"></a>
+        </li>
+      </ul>
     </div>
 
-    <div *ngIf="currentPage === 'upload'" class="container align-items-center py-5">
-        <div class="row">
-            <!-- <div class="offset-sm-0 offset-md-2 col-sm-12 col-md-8"> -->
-            <div class="offset-md-3 col-9">
-                <div class="card w-100">
-                    <div class="card-header">
-                        Conversão de PDF para CSV
+    <div class="page-content bg-light">
+
+      <div *ngIf="currentPage === 'upload'" class="container align-items-center p-5">
+        <div class="card">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-12">
+
+                <div class="row">
+                  <div class="col-4">
+
+                    <div class="form-group">
+                      <input #fileInput type="file" name="file-upload" id="file-upload" class="d-none"
+                        (change)="onFileChanged($event)" multiple>
+                      <label class="btn f-upload-label p-5 w-100" for="file-upload">
+                        Clique ou arraste um PDF aqui para enviar para conversão!
+                      </label>
                     </div>
-                    <!-- <img src="..." class="card-img-top" alt="..."> -->
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="form-group">
-                                    <input #fileInput type="file" name="file-upload" id="file-upload" class="d-none"
-                                        (change)="onFileChanged($event)">
-                                    <label class="btn f-upload-label p-5 w-100" for="file-upload">
-                                        Clique ou arraste um PDF aqui para enviar para conversão!
-                                    </label>
+                  </div>
+                  <div class="col-8">
+
+                    <div *ngIf="objectKeys(files).length > 0" class="form-group">
+                      <table class="table table-borderless table-hover">
+                        <tbody class="">
+                          <tr *ngFor="let key of objectKeys(files);">
+                            <td class="d-flex flex-column text-center v-align-middle">
+                              <img src="assets/icons/pdf.svg" alt="" height="45px">
+                              <small style="font-size: 9px;"
+                                class="text-muted">{{formatBytes(get(key).file.size)}}</small>
+                            </td>
+                            <td class="pb-0 v-align-middle">
+
+                              <div class="d-flex justify-content-between">
+                                <div class="d-flex flex-column">
+                                  <span class="f-name">{{ get(key).name }}</span>
+                                  <small class="f-status">{{ statusText(key, get(key).status) }}</small>
                                 </div>
-                                <div *ngIf="file != null" class="form-group">
-                                    <table class="table table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th>Nome</th>
-                                                <th>Tamanho</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="">
-                                            <tr>
-                                                <td>
-                                                    {{ file.name }}
-                                                </td>
-                                                <td>
-                                                    {{ formatBytes(file.size) }}
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                <div class="d-flex flex-row">
+                                  <button class="btn px-2" (click)="remove(key)">
+                                    <i class="fad fa-times-circle text-danger"></i>
+                                  </button>
+                                  <button *ngIf="get(key).conversionStatus === 'waiting'" class="btn px-2"
+                                    (click)="upload(key)">
+                                    <i class="fad fa-arrow-circle-up text-primary"></i>
+                                  </button>
+                                  <button *ngIf="get(key).conversionStatus === 'processing'" class="btn px-2"
+                                    (click)="upload(key)">
+                                    <i class="fad fa-spinner-third fa-spin text-secondary"></i>
+                                  </button>
+                                  <button *ngIf="get(key).conversionStatus === 'finished'" class="btn px-2"
+                                    (click)="preview(key)">
+                                    <i class="fad fa-eye text-success"></i>
+                                  </button>
+                                  <button *ngIf="get(key).conversionStatus === 'finished'" class="btn px-2"
+                                    (click)="download(key)">
+                                    <i class="fad fa-arrow-circle-down text-primary"></i>
+                                  </button>
+                                  <button *ngIf="get(key).conversionStatus === 'finished'" class="btn px-2"
+                                    (click)="reupload(key)">
+                                    <i class="fad fa-repeat text-secondary"></i>
+                                  </button>
                                 </div>
-                            </div>
-                        </div>
+                              </div>
+
+                              <progress class="custom-progress" max="100" [value]="percentageValue(key)"></progress>
+                              <!-- </div> -->
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
                     </div>
 
-                    <div class="card-footer">
-                        <div class="row">
-                            <div class="offset-2 col-8">
-                                <button class="btn btn-primary w-100" (click)="upload()">
-                                    <span class="text-upppercase">
-                                        Enviar Arquivos
-                                    </span>
-                                </button>
-                            </div>
+                    <div *ngIf="objectKeys(files).length === 0" class="h-100">
+                      <div class="d-flex flex-column align-items-center text-center w-100 h-100">
+                        <div class="d-flex align-items-center h-100">
+
+                          <h3>
+                            Nenhum arquivo selecionado!
+                          </h3>
                         </div>
+                      </div>
                     </div>
+
+                  </div>
                 </div>
+
+
+
+              </div>
             </div>
+          </div>
         </div>
+        <!-- </div> -->
+      </div>
+
+
+      <div *ngIf="currentPage === 'preview'" class="h-100">
+        <app-view class="h-100" [content]="content"></app-view>
+      </div>
+
     </div>
 
 
-    <div *ngIf="currentPage === 'preview'" class="container">
-        <div class="row">
-            <div class="col-12">
-                <app-view [content]="content"></app-view>
-            </div>
-        </div>
-    </div>
-
+  </div>
 </div>

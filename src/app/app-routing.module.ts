@@ -6,10 +6,13 @@ import { UploadComponent } from './modules/upload/upload.component';
 import { ContentLayoutComponent } from './layout/content-layout/content-layout.component';
 
 
+const REDIRECT_ROOT = { path: '', redirectTo: '/dashboard', pathMatch: 'full' }
+
+
+
+
 const routes: Routes = [
-  {
-    path: '', component: AppComponent
-  },
+  REDIRECT_ROOT,
   {
     path: 'dashboard',
     data: {

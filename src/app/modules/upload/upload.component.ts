@@ -1,5 +1,45 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ConversionService } from '@app/http/conversion.service';
+import { HttpEventType, HttpResponse } from '@angular/common/http';
+
+export interface IFileInputStatus {
+    name: string;
+    value: string;
+}
+
+export enum FileInputStatus {
+    WAITING = 0,
+    UPLOADING = 1,
+    CONVERTING = 2,
+    DOWNLOADING = 3,
+    FINISHED = 4
+}
+
+export class FileInput {
+    name: string;
+    file: File;
+    status: FileInputStatus;
+    percentage: number = 0;
+
+    conversionStatus: 'waiting' | 'processing' | 'finished';
+    conversionResult: string;
+    conversionName: string;
+
+    public statusText() {
+        switch (this.status) {
+            case FileInputStatus.WAITING:
+                return "Aguardando";
+            case FileInputStatus.UPLOADING:
+                return "Enviando";
+            case FileInputStatus.CONVERTING:
+                return "Convertendo";
+            case FileInputStatus.DOWNLOADING:
+                return "Baixando";
+            case FileInputStatus.FINISHED:
+                return "Finalizado";
+        }
+    }
+}
 
 
 @Component({
@@ -9,10 +49,15 @@ import { ConversionService } from '@app/http/conversion.service';
 })
 export class UploadComponent implements OnInit {
 
+    objectKeys = Object.keys;
+
     public currentPage: 'upload' | 'preview' = 'upload';
 
     @ViewChild('fileInput')
     public fileInputElement: ElementRef;
+
+    @ViewChild('container')
+    public contentElement: ElementRef;
 
     public file: File;
 
@@ -20,12 +65,67 @@ export class UploadComponent implements OnInit {
 
     public content: string;
 
-    constructor(
-        private conversion: ConversionService
-    ) { }
+    public percentage = 0;
+
+    // Objeto contendo todos os arquivos selecionados para conversão.
+    // Chave é nome do arquivo, valor são os dados do arquivo.
+    public files: any = {};
+
+    constructor(private conversion: ConversionService) { }
+
+    public toggleConfiguration() {
+        this.contentElement.nativeElement.classList.toggle('hidden');
+    }
+
+    public get(filename: string): FileInput {
+        return <FileInput>this.files[filename] || new FileInput();
+    }
+
+    public remove(filename: string): void {
+        delete this.files[filename];
+    }
+
+    public preview(filename: string): void {
+        this.content = this.get(filename).conversionResult;
+        this.currentPage = 'preview';
+    }
+
+    public download(filename: string) {
+        const blob = new Blob([this.get(filename).conversionResult], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        // window.open(url, "_blank");
+        const element = document.createElement('a');
+        element.href = url
+        element.download = this.get(filename).conversionName;
+        document.body.appendChild(element);
+        element.click();
+    }
+
+    public reupload(filename: string): void {
+        this.get(filename).status = FileInputStatus.WAITING;
+        this.get(filename).percentage = 0;
+        this.get(filename).conversionResult = '';
+        this.get(filename).conversionStatus = 'waiting';
+
+        this.upload(filename);
+    }
+
+
+
 
     public onFileChanged(event) {
         try {
+            const inputFiles = this.fileInputElement.nativeElement.files;
+
+            [...inputFiles].forEach((inputFile: File) => {
+                this.files[inputFile.name] = <FileInput>{
+                    name: inputFile.name,
+                    file: inputFile,
+                    status: FileInputStatus.WAITING,
+                    conversionStatus: 'waiting'
+                }
+            });
+
             this.file = this.fileInputElement.nativeElement.files[0];
         } finally {
             this.fileInputElement.nativeElement.value = "";
@@ -34,16 +134,66 @@ export class UploadComponent implements OnInit {
 
     }
 
-    public upload() {
+    public percentageValue(filename: string) {
+        return this.get(filename).percentage || 0;
+    }
+    public statusText(filename: string, status: FileInputStatus): string {
+        switch (status) {
+            case FileInputStatus.WAITING:
+                return "Aguardando";
+            case FileInputStatus.UPLOADING:
+                return "Enviando";
+            case FileInputStatus.CONVERTING:
+                return "Convertendo";
+            case FileInputStatus.DOWNLOADING:
+                return "Baixando";
+            case FileInputStatus.FINISHED:
+                return "Finalizado";
+        }
+    }
+
+
+
+    public upload(filename: string) {
         const config = window.localStorage.getItem("config");
-        this.conversion.upload(this.file, config).subscribe((response) => {
-            // this.store(this.file.name, response);
-            this.content = response;
-            this.download(response)
+
+        const fileInput: FileInput = this.get(filename);
+        this.get(filename).conversionStatus = 'processing';
+
+        this.conversion.upload(fileInput.file, config).subscribe((event) => {
+            if (event.type === HttpEventType.UploadProgress) {
+                const percentage = Math.round(30 * event.loaded / event.total);
+
+                this.get(filename).status = FileInputStatus.UPLOADING;
+                this.get(filename).percentage = percentage;
+
+                if (percentage === 30) {
+                    this.get(filename).status = FileInputStatus.CONVERTING;
+                }
+            } else if (event.type === HttpEventType.DownloadProgress) {
+                const percentage = Math.round(100 * event.loaded / event.total);
+
+                this.get(filename).status = FileInputStatus.DOWNLOADING;
+                this.get(filename).percentage = percentage;
+            } else if (event.type === HttpEventType.ResponseHeader) {
+                const percentage = Math.round(60 * event.loaded / event.total);
+
+                this.get(filename).status = FileInputStatus.CONVERTING;
+                this.get(filename).percentage = percentage;
+            } else if (event instanceof HttpResponse) {
+                this.get(filename).status = FileInputStatus.FINISHED;
+
+                this.get(filename).conversionStatus = 'finished';
+                this.get(filename).conversionResult = event.body;
+                this.get(filename).conversionName = filename;
+
+                // this.content = event.body;
+                //this.download(event)
+            }
         });
     }
 
-    private download(data) {
+    private downloadb(data) {
         const blob = new Blob([data], { type: 'text/csv' });
         const url = window.URL.createObjectURL(blob);
         window.open(url, "_blank");
@@ -63,18 +213,13 @@ export class UploadComponent implements OnInit {
     }
     // 
     // 
-    //
-    private get() {
-        for (let i = 0; i < window.localStorage.length; i++) {
-            this.conversions.push(window.localStorage.key(i));
-        }
-    }
+    //F
     private store(filename: string, content: string) {
         window.localStorage.setItem(filename, content);
     }
 
     ngOnInit() {
-        this.get();
+        // this.get();
     }
 
 }

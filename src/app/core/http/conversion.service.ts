@@ -20,7 +20,10 @@ export class ConversionService {
         const url = `${this.api}/api/v1/conversions/upload`;
         const form = this.buildFormData(file, opts);
 
-        return this.http.post(url, form, { responseType: 'text'});
+        return this.http.post(url, form, {
+            responseType: 'text', reportProgress: true,
+            observe: 'events'
+        });
     }
 
     public buildFormData(file: File, opts: any) {
