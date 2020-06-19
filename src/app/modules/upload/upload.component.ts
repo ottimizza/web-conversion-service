@@ -41,6 +41,7 @@ export class FileInput {
     }
 }
 
+export interface FileInputMap { [key: string]: FileInput; }
 
 @Component({
     selector: 'app-upload',
@@ -59,7 +60,6 @@ export class UploadComponent implements OnInit {
     @ViewChild('container')
     public contentElement: ElementRef;
 
-    public file: File;
 
     public conversions: Array<any> = new Array<any>();
 
@@ -114,10 +114,8 @@ export class UploadComponent implements OnInit {
 
 
     public onFileChanged(event) {
-        try {
-            const inputFiles = this.fileInputElement.nativeElement.files;
-
-            [...inputFiles].forEach((inputFile: File) => {
+        [...this.fileInputElement.nativeElement.files]
+            .forEach((inputFile: File) => {
                 this.files[inputFile.name] = <FileInput>{
                     name: inputFile.name,
                     file: inputFile,
@@ -125,13 +123,7 @@ export class UploadComponent implements OnInit {
                     conversionStatus: 'waiting'
                 }
             });
-
-            this.file = this.fileInputElement.nativeElement.files[0];
-        } finally {
-            this.fileInputElement.nativeElement.value = "";
-        }
-        console.log(this.file);
-
+        this.fileInputElement.nativeElement.value = "";
     }
 
     public percentageValue(filename: string) {
@@ -185,7 +177,7 @@ export class UploadComponent implements OnInit {
 
                 this.get(filename).conversionStatus = 'finished';
                 this.get(filename).conversionResult = event.body;
-                this.get(filename).conversionName = filename;
+                this.get(filename).conversionName = filename.replace('.pdf', '.csv').replace('.PDF', '.csv');
 
                 // this.content = event.body;
                 //this.download(event)
