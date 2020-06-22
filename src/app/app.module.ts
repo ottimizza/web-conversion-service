@@ -27,9 +27,8 @@ import { NavbarLayoutModule } from './layout/navbar-layout/navbar-layout.module'
 import { DragDropDirective } from '@shared/directives/drag-drop.directive';
 import { DocPipe } from '@shared/pipes/doc.pipe';
 import { PipesModule } from '@shared/pipes/pipes.module';
-import { SigninAsDialogModule } from '@modules/organizations/dialogs/signin-as-dialog/signin-as-dialog.module';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { SigninAsDialogComponent } from '@modules/organizations/dialogs/signin-as-dialog/signin-as-dialog.component';
+import { MatSnackBarModule } from '@angular/material';
 
 @NgModule({
   declarations: [
@@ -68,8 +67,8 @@ import { SigninAsDialogComponent } from '@modules/organizations/dialogs/signin-a
     BrandModule,
     BreadcrumbModule,
 
-    SigninAsDialogModule,
-    MatDialogModule
+    MatDialogModule,
+    MatSnackBarModule
 
 
   ],
@@ -77,6 +76,5 @@ import { SigninAsDialogComponent } from '@modules/organizations/dialogs/signin-a
     ErrorInterceptorProvider
   ],
   bootstrap: [AppComponent],
-  entryComponents: [SigninAsDialogComponent]
 })
 export class AppModule { }

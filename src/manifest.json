@@ -1,6 +1,6 @@
 {
-  "name": "ng-accounts",
-  "short_name": "ng-accounts",
+  "name": "conversion-service",
+  "short_name": "conversion-service",
   "gcm_sender_id": "92294481127",
   "theme_color": "#1976d2",
   "background_color": "#fafafa",

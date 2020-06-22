@@ -1,0 +1,41 @@
+<table class="table table-borderless table-hover">
+  <tbody>
+    <tr *ngFor="let key of keys(inputFiles);">
+      <td class="d-flex flex-column text-center">
+        <img src="assets/icons/pdf.svg" alt="" height="45px">
+        <small style="font-size: 9px;" class="text-muted">
+          {{ formatBytes(key) }}
+        </small>
+      </td>
+      <td class="pb-0">
+        <div class="d-flex justify-content-between">
+          <div class="d-flex flex-column">
+            <span class="f-name">{{ formatName(key) }}</span>
+            <small class="f-status">{{ formatStatus(key) }}</small>
+          </div>
+          <div class="d-flex flex-row">
+            <button class="btn px-2" (click)="remove(key)">
+              <i class="fad fa-times-circle text-danger"></i>
+            </button>
+            <button *ngIf="isWaiting(key)" class="btn px-2" (click)="upload(key)">
+              <i class="fad fa-arrow-circle-up text-primary"></i>
+            </button>
+            <button *ngIf="isProcessing(key)" class="btn px-2">
+              <i class="fad fa-spinner-third fa-spin text-secondary"></i>
+            </button>
+            <button *ngIf="isFinished(key)" class="btn px-2" (click)="preview(key)">
+              <i class="fad fa-eye text-success"></i>
+            </button>
+            <button *ngIf="isFinished(key)" class="btn px-2" (click)="download(key)">
+              <i class="fad fa-arrow-circle-down text-primary"></i>
+            </button>
+            <button *ngIf="isFinished(key)" class="btn px-2" (click)="upload(key)">
+              <i class="fad fa-repeat text-secondary"></i>
+            </button>
+          </div>
+        </div>
+        <progress class="custom-progress w-100" max="100" [value]="formatPercentage(key)"></progress>
+      </td>
+    </tr>
+  </tbody>
+</table>

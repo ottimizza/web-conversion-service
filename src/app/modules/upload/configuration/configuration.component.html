@@ -1,0 +1,90 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+
+            <!-- ESTRATEGIA -->
+            <div class="form-group mb-4">
+                <label>Estratégia de Conversão:</label>
+                <select class="form-control" [(ngModel)]="config.strategy" (change)="strategy($event)">
+                    <option *ngFor="let strategy of strategies.options" [value]="strategy.value">
+                        {{ strategy.name }}
+                    </option>
+                </select>
+                <small class="form-text text-muted">
+                    {{ strategies.selected.description }}
+                    <br>
+                    <a href="https://github.com/ottimizza/api-file-conversion/blob/master/README.md">Documentação</a>
+                </small>
+            </div>
+
+
+            <!-- DELIMITADOR -->
+            <div class="form-group mb-4">
+                <label>Delimitador:</label>
+                <div class="input-group">
+                    <div class="btn-group w-100">
+                        <button class="btn btn-outline-primary px-3" [class.active]="config.delimiter === ','"
+                            (click)="delimiter(',')">
+                            <span class="text-center">
+                                <strong>,</strong><br><small class="text-muted">(Vírgula)</small>
+                            </span>
+                        </button>
+                        <button class="btn btn-outline-primary px-3" [class.active]="config.delimiter === ';'"
+                            (click)="delimiter(';')">
+                            <span class="text-center">
+                                <strong>;</strong><br><small class="text-muted">(Ponto e Vírgula)</small>
+                            </span>
+                        </button>
+                        <button class="btn btn-outline-primary px-3" [class.active]="config.delimiter === '|'"
+                            (click)="delimiter('|')">
+                            <span class="text-center">
+                                <strong>|</strong><br><small class="text-muted">(Pipe)</small>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+                <small class="form-text text-muted">
+                    Informe o separador do CSV.
+                </small>
+            </div>
+
+            <!-- PAGINAS -->
+            <div class="form-group mb-4">
+                <label for="basic-url">Páginas:</label>
+                <input id="input-pages" [(ngModel)]="config.pages" (ngModelChange)="pages(config.pages)" class="form-control"
+                    placeholder="[1,2,3,4,5]" type="text">
+                <small class="text-muted">
+                    Informe as páginas que serão lidas.<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;* [0,1,2]<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;* [0-5]<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;* [0-5,7,8,9]<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;* [0-5,7-9]<br>
+                </small>
+            </div>
+
+            <!-- TRIM -->
+            <div class="custom-control custom-switch mb-4">
+                <input id="switch-trim" [(ngModel)]="config.trim" class="custom-control-input" type="checkbox">
+                <label class="custom-control-label" for="switch-trim">
+                    Trim <br>
+                    <small class="text-muted">
+                        (Remove os espaços à esquerda e a direita no texto)
+                    </small>
+                </label>
+            </div>
+
+
+            <!-- SHRINK -->
+            <div class="custom-control custom-switch">
+                <input id="switch-shrink" [(ngModel)]="config.shrink" class="custom-control-input" type="checkbox">
+                <label class="custom-control-label" for="switch-shrink">
+                    Shrink <br>
+                    <small class="text-muted">
+                        (Remove as células vazias - deslocamento de colunas)
+                    </small>
+                </label>
+            </div>
+
+        </div>
+    </div>
+</div>

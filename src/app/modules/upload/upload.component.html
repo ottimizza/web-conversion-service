@@ -1,0 +1,125 @@
+<div>
+  <!-- <div class="conversion-config-sidebar">
+    <button (click)="toggleConfiguration()" class="btn conversion-config-sidebar-toggle">
+      <i class="far fa-bars"></i>
+    </button>
+    <app-configuration class="conversion-config"></app-configuration>
+  </div> -->
+  <button mat-fab class="btn-filter cursor-pointer" (click)="sideIsOpened = !sideIsOpened" [ngClass]="{ 'btn-filter-active': sideIsOpened }">
+    <i class="fa fa-times" [ngClass]="{ 'd-none': !sideIsOpened }"></i>
+    <!-- <i class="fa fa-cog" [ngClass]="{ 'd-none': sideIsOpened }"></i> -->
+    <i class="fa fa-sliders-h" [ngClass]="{ 'd-none': sideIsOpened }"></i>
+  </button>
+
+  <div class="side-filter border shadow text-center m-0 pt-4" [ngClass]="{ 'side-filter-active': sideIsOpened }">
+    <app-configuration></app-configuration>
+  </div>
+
+
+
+
+  <div class="page-wrapper d-flex flex-column">
+    <app-breadcrumb></app-breadcrumb>
+    <!-- <div class="header d-flex align-items-center">
+      <a href="#" class="mw-100 navbar-brand px-4">
+        <img style="height: 25px;" height="40px" class="img-thumbnail bg-transparent p-0 border-0"
+          src="https://ottimizza.com.br/images/ottimizza.png" alt="undefined">
+      </a>
+      <ul class="custom-nav nav nav-pills nav-fill">
+        <li class="nav-item">
+          <a class="btn nav-link" [class.active]="currentPage == 'upload'" (click)="currentPage = 'upload'">
+            Envio de Planilha
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="btn nav-link" [class.active]="currentPage == 'preview'" (click)="currentPage = 'preview'">
+            Visualização
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#"></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link disabled" href="#"></a>
+        </li>
+      </ul>
+    </div> -->
+    <!-- <mat-tab-group (selectedIndexChange)="currentPage = $event">
+      <mat-tab label="Envio de Planilha"></mat-tab>
+      <mat-tab label="Visualização"></mat-tab>
+    </mat-tab-group> -->
+    <div class="content-wrapper full-width-nav-tabs pt-2">
+      <div class="container">
+        <div class="row justify-content-between">
+          <ul id="nav-tab" role="tablist" class="nav nav-tabs nav-justified-not border-0">
+
+            <li class="nav-item">
+              <a class="p-2 px-3 nav-link cursor-pointer" (click)="currentPage = 0"
+                [class.active]="currentPage === 0">
+                <i class="fad fa-file-upload"></i><span class="d-none d-md-inline-block">&nbsp;&nbsp;Envio de Planilha</span>
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a class="p-2 px-3 nav-link cursor-pointer" (click)="currentPage = 1"
+                [class.active]="currentPage === 1">
+                <i class="fad fa-eye"></i><span class="d-none d-md-inline-block">&nbsp;&nbsp;Visualização</span>
+              </a>
+            </li>
+
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-content bg-light">
+
+      <div *ngIf="currentPage === 0" class="container align-items-center p-5">
+        <div class="card">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-12">
+
+                <div class="row">
+                  <div class="col-4">
+
+                    <div class="form-group">
+                      <input #fileInput type="file" name="file-upload" id="file-upload" class="d-none"
+                        (change)="onFileChanged($event)" multiple accept="application/pdf">
+                      <label class="btn f-upload-label p-5 w-100" for="file-upload">
+                        Clique ou arraste um PDF aqui para enviar para conversão!
+                      </label>
+                    </div>
+                  </div>
+                  <div class="col-8">
+
+                    <div *ngIf="objectKeys(files).length > 0" class="form-group">
+                      <app-files-table [inputFiles]="files" (download)="download($event)" (remove)="remove($event)"
+                        (preview)="preview($event)" (upload)="reupload($event)">
+                      </app-files-table>
+                    </div>
+
+                    <div *ngIf="objectKeys(files).length === 0" class="h-100">
+                      <div class="d-flex flex-column align-items-center text-center w-100 h-100">
+                        <div class="d-flex align-items-center h-100">
+                          <h3>
+                            Nenhum arquivo selecionado!
+                          </h3>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="currentPage === 1" class="h-100">
+        <app-view class="h-100" [content]="content"></app-view>
+      </div>
+    </div>
+
+  </div>
+</div>

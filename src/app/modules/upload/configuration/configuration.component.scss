@@ -1,0 +1,17 @@
+.btn-group {
+    .btn {
+        transition: all .25s;
+        &:hover {
+            background-color: #e7e7e7;
+            color: #666;
+        }
+        &.active {
+            background-color: #004ecb;
+            color: #fafafa !important;
+
+            .text-muted {
+                color: #fafafa !important;
+            }
+        }
+    }
+}

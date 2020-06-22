@@ -14,7 +14,7 @@ export class CNPJUtils {
     if (cnpj.length !== 14) { return false; }
 
     let base: string = cnpj.substring(0, 12);
-    let dv: string = cnpj.substring(12);
+    const dv: string = cnpj.substring(12);
 
     let sum = 0;
     let index = 5;

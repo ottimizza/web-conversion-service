@@ -23,33 +23,17 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'products',
+        redirectTo: 'upload',
         pathMatch: 'full'
       },
       {
-        path: 'products',
+        path: 'upload',
         data: {
-          breadcrumb: 'Aplicativos'
+          breadcrumb: 'Conversor'
         },
-        loadChildren: () => import('@modules/products/products.module').then(m => m.ProductsModule),
+        loadChildren: () => import('@modules/upload/upload.module').then(m => m.UploadModule),
         canActivate: [AuthGuard]
-      },
-      {
-        path: 'users',
-        data: {
-          breadcrumb: 'Usuários'
-        },
-        loadChildren: () => import('@modules/users/users.module').then(m => m.UsersModule),
-        canActivate: [AuthGuard]
-      },
-      {
-        path: 'organizations',
-        data: {
-          breadcrumb: 'Empresas'
-        },
-        loadChildren: () => import('@modules/organizations/organizations.module').then(m => m.OrganizationModule),
-        canActivate: [AuthGuard]
-      },
+      }
     ]
   },
   {
