@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router, CanActivateChild, ActivatedRoute, Route } from '@angular/router';
 import { AuthenticationService } from '@app/authentication/authentication.service';
-import { Subject } from 'rxjs';
 import { AuthSession } from '@shared/models/AuthSession';
 import { switchMap, finalize } from 'rxjs/operators';
 import { StorageService } from '@app/services/storage.service';

@@ -49,8 +49,9 @@ export class AuthCallbackComponent implements OnInit {
                 this.storageService.destroy('redirect_url');
                 if (value) {
                   that.router.navigate([value]);
+                } else {
+                  that.router.navigate(['/']);
                 }
-                else that.router.navigate(['/dashboard/products']);
               });
 
               // const storeUserInfo = that.authenticationService.storeUserInfo();
@@ -60,7 +61,7 @@ export class AuthCallbackComponent implements OnInit {
               //   storeUserInfo,
               //   storeTokenInfo
               // ]).then((values) => {
-              
+
 
 
               // that.router.navigate(['dashboard']);
@@ -68,6 +69,8 @@ export class AuthCallbackComponent implements OnInit {
               //   console.log(e);
               // });
             });
+          } else {
+            this.router.navigate(['/landpage']);
           }
         });
       }

@@ -14,6 +14,14 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   {
+    path: 'landpage',
+    data: {
+      breadcrumb: null
+    },
+    canActivate: [NoAuthGuard],
+    loadChildren: () => import('@modules/land-page/land-page.module').then(m => m.LandPageModule)
+  },
+  {
     path: 'dashboard',
     data: {
       breadcrumb: 'Dashboard'
@@ -35,6 +43,11 @@ const routes: Routes = [
         canActivate: [AuthGuard]
       }
     ]
+  },
+  {
+    path: '**',
+    redirectTo: 'dashboard',
+    pathMatch: 'full'
   },
   {
     path: 'auth',
