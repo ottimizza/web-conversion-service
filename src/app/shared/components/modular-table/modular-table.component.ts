@@ -66,7 +66,7 @@ export class ModularTableComponent implements OnInit, OnChanges {
 
     this.mapped.emit(map);
 
-    const structure = [];
+    const structure: ModularTableContent = [];
     if (this.config.header) {
       structure.concat(this.header.concat([]));
     }
