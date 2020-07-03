@@ -57,12 +57,6 @@ export class NavbarLayoutComponent implements OnInit {
 
   public logout() {
     this.router.navigate(['auth', 'logout']);
-    // this.authorizationService.revokeToken().subscribe((r1: any) => {
-    //   this.authorizationService.clearStorage();
-    //   return this.authorizationService.logout().subscribe((r2: any) => {
-    //     this.authorizationService.authorize();
-    //   });
-    // });
   }
 
   allowNotifications() {
